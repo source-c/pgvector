@@ -1,7 +1,5 @@
 #include "postgres.h"
 
-#include <float.h>
-
 #include "common/shortest_dec.h"
 #include "fmgr.h"
 #include "half.h"
