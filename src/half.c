@@ -288,13 +288,13 @@ half_l2_distance(PG_FUNCTION_ARGS)
 	ArrayType  *b = PG_GETARG_ARRAYTYPE_P(1);
 	half	   *ax = (half *) ARR_DATA_PTR(a);
 	half	   *bx = (half *) ARR_DATA_PTR(b);
-	half		distance = 0.0;
+	double		distance = 0.0;
 	int			dim = CheckDims(a, b);
 
 	/* Auto-vectorized */
 	for (int i = 0; i < dim; i++)
 	{
-		half		diff = ax[i] - bx[i];
+		double		diff = ax[i] - bx[i];
 
 		distance += diff * diff;
 	}
@@ -314,13 +314,13 @@ half_l2_squared_distance(PG_FUNCTION_ARGS)
 	ArrayType  *b = PG_GETARG_ARRAYTYPE_P(1);
 	half	   *ax = (half *) ARR_DATA_PTR(a);
 	half	   *bx = (half *) ARR_DATA_PTR(b);
-	half		distance = 0.0;
+	double		distance = 0.0;
 	int			dim = CheckDims(a, b);
 
 	/* Auto-vectorized */
 	for (int i = 0; i < dim; i++)
 	{
-		half		diff = ax[i] - bx[i];
+		double		diff = ax[i] - bx[i];
 
 		distance += diff * diff;
 	}
