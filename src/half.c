@@ -339,7 +339,7 @@ half_inner_product(PG_FUNCTION_ARGS)
 	ArrayType  *b = PG_GETARG_ARRAYTYPE_P(1);
 	half	   *ax = (half *) ARR_DATA_PTR(a);
 	half	   *bx = (half *) ARR_DATA_PTR(b);
-	half		distance = 0.0;
+	double		distance = 0.0;
 	int			dim = CheckDims(a, b);
 
 	/* Auto-vectorized */
@@ -360,7 +360,7 @@ half_negative_inner_product(PG_FUNCTION_ARGS)
 	ArrayType  *b = PG_GETARG_ARRAYTYPE_P(1);
 	half	   *ax = (half *) ARR_DATA_PTR(a);
 	half	   *bx = (half *) ARR_DATA_PTR(b);
-	half		distance = 0.0;
+	double		distance = 0.0;
 	int			dim = CheckDims(a, b);
 
 	/* Auto-vectorized */
@@ -381,9 +381,9 @@ half_cosine_distance(PG_FUNCTION_ARGS)
 	ArrayType  *b = PG_GETARG_ARRAYTYPE_P(1);
 	half	   *ax = (half *) ARR_DATA_PTR(a);
 	half	   *bx = (half *) ARR_DATA_PTR(b);
-	half		distance = 0.0;
-	half		norma = 0.0;
-	half		normb = 0.0;
+	double		distance = 0.0;
+	double		norma = 0.0;
+	double		normb = 0.0;
 	double		similarity;
 	int			dim = CheckDims(a, b);
 
