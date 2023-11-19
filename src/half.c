@@ -294,7 +294,7 @@ half_l2_distance(PG_FUNCTION_ARGS)
 	/* Auto-vectorized */
 	for (int i = 0; i < dim; i++)
 	{
-		double		diff = ax[i] - bx[i];
+		double		diff = (double) ax[i] - (double) bx[i];
 
 		distance += diff * diff;
 	}
@@ -320,7 +320,7 @@ half_l2_squared_distance(PG_FUNCTION_ARGS)
 	/* Auto-vectorized */
 	for (int i = 0; i < dim; i++)
 	{
-		double		diff = ax[i] - bx[i];
+		double		diff = (double) ax[i] - (double) bx[i];
 
 		distance += diff * diff;
 	}
@@ -344,7 +344,7 @@ half_inner_product(PG_FUNCTION_ARGS)
 
 	/* Auto-vectorized */
 	for (int i = 0; i < dim; i++)
-		distance += ax[i] * bx[i];
+		distance += (double) ax[i] * (double) bx[i];
 
 	PG_RETURN_FLOAT8(distance);
 }
@@ -365,7 +365,7 @@ half_negative_inner_product(PG_FUNCTION_ARGS)
 
 	/* Auto-vectorized */
 	for (int i = 0; i < dim; i++)
-		distance += ax[i] * bx[i];
+		distance += (double) ax[i] * (double) bx[i];
 
 	PG_RETURN_FLOAT8(distance * -1);
 }
@@ -390,8 +390,8 @@ half_cosine_distance(PG_FUNCTION_ARGS)
 	/* Auto-vectorized */
 	for (int i = 0; i < dim; i++)
 	{
-		half		axi = ax[i];
-		half		bxi = bx[i];
+		double		axi = ax[i];
+		double		bxi = bx[i];
 
 		distance += axi * bxi;
 		norma += axi * axi;
