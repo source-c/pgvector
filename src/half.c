@@ -31,10 +31,18 @@ float_underflow_error(void)
 /*
  * Check if array is a vector
  */
-static bool
-ArrayIsVector(ArrayType *a)
+static void
+CheckArrayIsVector(ArrayType *array)
 {
-	return ARR_NDIM(a) == 1 && !array_contains_nulls(a);
+	if (ARR_NDIM(array) > 1)
+		ereport(ERROR,
+				(errcode(ERRCODE_DATA_EXCEPTION),
+				 errmsg("array must be 1-D")));
+
+	if (ARR_HASNULL(array) && array_contains_nulls(array))
+		ereport(ERROR,
+				(errcode(ERRCODE_NULL_VALUE_NOT_ALLOWED),
+				 errmsg("array must not contain nulls")));
 }
 
 /*
@@ -46,14 +54,16 @@ CheckDims(ArrayType *a, ArrayType *b)
 	int			dima;
 	int			dimb;
 
-	if (!ArrayIsVector(a) || !ArrayIsVector(b))
-		return 0;
+	CheckArrayIsVector(a);
+	CheckArrayIsVector(b);
 
 	dima = ARR_DIMS(a)[0];
 	dimb = ARR_DIMS(b)[0];
 
 	if (dima != dimb)
-		return 0;
+		ereport(ERROR,
+				(errcode(ERRCODE_DATA_EXCEPTION),
+				 errmsg("different dimensions %d and %d", dima, dimb)));
 
 	return dima;
 }
@@ -281,10 +291,6 @@ half_l2_distance(PG_FUNCTION_ARGS)
 	half		distance = 0.0;
 	int			dim = CheckDims(a, b);
 
-	/* TODO Decide on error or NULL */
-	if (!dim)
-		PG_RETURN_NULL();
-
 	/* Auto-vectorized */
 	for (int i = 0; i < dim; i++)
 	{
@@ -310,10 +316,6 @@ half_inner_product(PG_FUNCTION_ARGS)
 	half		distance = 0.0;
 	int			dim = CheckDims(a, b);
 
-	/* TODO Decide on error or NULL */
-	if (!dim)
-		PG_RETURN_NULL();
-
 	/* Auto-vectorized */
 	for (int i = 0; i < dim; i++)
 		distance += ax[i] * bx[i];
@@ -334,10 +336,6 @@ half_negative_inner_product(PG_FUNCTION_ARGS)
 	half	   *bx = (half *) ARR_DATA_PTR(b);
 	half		distance = 0.0;
 	int			dim = CheckDims(a, b);
-
-	/* TODO Decide on error or NULL */
-	if (!dim)
-		PG_RETURN_NULL();
 
 	/* Auto-vectorized */
 	for (int i = 0; i < dim; i++)
@@ -362,10 +360,6 @@ half_cosine_distance(PG_FUNCTION_ARGS)
 	half		normb = 0.0;
 	double		similarity;
 	int			dim = CheckDims(a, b);
-
-	/* TODO Decide on error or NULL */
-	if (!dim)
-		PG_RETURN_NULL();
 
 	/* Auto-vectorized */
 	for (int i = 0; i < dim; i++)
